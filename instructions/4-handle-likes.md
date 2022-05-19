@@ -12,7 +12,7 @@ The URL you need are the following
 Obviously, you'll need to add the following functions to the module responsible for calling the API
 
 ```javascript
-export function likeWine(id) {
+export const likeWine = (id) => {
   return fetch(`${host}/api/wines/${id}/like`, {
     method: 'POST',
     headers: {
@@ -23,34 +23,32 @@ export function likeWine(id) {
   });
 }
 
-export function unlikeWine(id) {
-  ...
+export const unlikeWine = (id) => {
+  // ...
 }
 
-export function isWineLiked(id) {
-  ...
+export const isWineLiked = (id) => {
+  // ...
 }
 ```
 
 ## The `<LikeButton />` component
 
-Now, you have to write a new component to display the `like` button into a `<Wine />` component. The button will be added in the `card-action` section. This component will have the following contract
+Now, you have to write a new component to display the `like` button into a `<Wine />` component. (You can adapt the `<LikeButton />` from step 1) The button will be added in the `card-action` section. This component will have the following contract
 
-```javascript
-import React, { Component } from 'react';
+```jsx
 import PropTypes from 'prop-types';
 
-export class LikeButton extends Component {
+const LikeButton = (wine) => {
+  const [liked, setLiked] = useState(false);
+  // ...
+}
 
-  static propTypes = {
-    wine: PropTypes.object
-  };
+LikeButton.propTypes = {
+  wine: PropTypes.object
+}
 
-  state = {
-    liked: false
-  };
-  ...
-});
+export default LikeButton;
 ```
 
 when the wine is unliked, the button must look something like the following snippet
@@ -69,29 +67,28 @@ when the wine is liked, the button must look something like the following snippe
 </a>
 ```
 
-If you need to react to the change of a property value in a component, you can use the `componentWillReceiveProps` function
+If you need to react to the change of a property value in a component, you can use a `useEffect` function
 
 ```javascript
-import React, { Component } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export class LikeButton extends Component {
-
-  static propTypes = {
-    wine: PropTypes.object
-  };
-
-  state = {
-    liked: false
-  };
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.wine !== this.props.wine) {
-      ...
-    }
-  }
-  ...
+const LikeButton = (wine) => {
+  const [liked, setLiked] = useState(false);
+  
+  useEffect(() => {
+    // This function will be triggered each time the wine prop is changed
+    // ...
+  }, [wine]);
+  
+  // ...
 }
+
+LikeButton.propTypes = {
+  wine: PropTypes.object
+}
+
+export default LikeButton;
 ```
 ## What it should look like
 
