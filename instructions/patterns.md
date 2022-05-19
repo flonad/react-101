@@ -18,13 +18,20 @@ You can use multiple classes
 <div className="a-class another-class">...</div>
 ```
 
-You can use some tricks to add classes conditionaly
+You can use some tricks to add classes conditionally
 
 ```jsx
 <div className={[condition1 ? 'a-class' : '', !condition1 ? 'another-class' : ''].join(' ')}>...</div>
 ```
 
-### Style a component with a css file living next to the component
+But there is a lib to add classes conditionally
+
+```jsx
+import classNames from "classnames";
+<div className={classNames('a-class', { ['another-class']: !condition1 })}>...</div>
+```
+
+### Style a component with a css file living next to the component (recommended)
 
 Using webpack, it's pretty easy to inject CSS parts inside a javascript file
 
@@ -35,7 +42,7 @@ Using webpack, it's pretty easy to inject CSS parts inside a javascript file
 }
 ```
 
-```javascript
+```jsx
 import React, { Component } from 'react';
 import './MyComponent.css';  // inject css (using webpack)
 
@@ -53,7 +60,7 @@ export class MyComponent extends Component {
 
 React let you write inline style pretty easily
 
-```javascript
+```jsx
 import React, { Component } from 'react';
 
 const Styles = {
@@ -66,123 +73,100 @@ const Styles = {
   ...
 };
 
-export class MyComponent extends Component {
-  render() {
-    return (
-      <div style={Styles.myComponent}>...</div>
-    );
-  }
+export const MyComponent = () => {
+  return (
+    <div style={Styles.myComponent}>...</div>
+  );
 }
 ```
 
 ## Conditional display of components
 
-if you want to display component conditionaly, you can use truthy/falsy trick
+if you want to display component conditionally, you can use truthy/falsy trick
 
-```javascript
-export class MyComponent extends Component {
-
-  render() {
-    return (
-      <div>
-        {this.state.loading && (
-          <h2>Loading ...</h2>
-        )}
-        {!this.state.loading && (
-          <h2>Loaded</h2>
-        )}
-      </div>
+```jsx
+export const MyComponent = () => {
+  return (
+    <div>
+      {loading && (
+        <h2>Loading ...</h2>
+      )}
+      {!loading && (
+        <h2>Loaded</h2>
+      )}
+    </div>
     );
-  }
 }
 ```
 
-## Add props on `this.props.children`
+## Add props on `props.children`
 
 sometimes you want to write a component that will render its children, but you'd like to add some props to the children.
 It's quite useful with `react-router` for instance. To do that your can use `React.cloneElement`
 
-```javascript
-import React, { Component } from 'react';
-
-export class MyComponent extends Component {
-
-  render() {
-    return (
-      <div>
-        <h2>{this.props.title}</h2>
-        {this.props.children && React.cloneElement(this.props.children, {
-          newProps: 'new prop value'
-        })}
-      </div>
-    );
-  }
+```jsx
+export const MyComponent = (props) => {
+  return (
+    <div>
+      <h2>{props.title}</h2>
+      {props.children && React.cloneElement(props.children, {
+        newProps: 'new prop value'
+      })}
+    </div>
+  );
 }
 ```
 
 ## Loading data from an HTTP services
 
-If you want to fetch some data when a component is mounted to the dom, use the lifecycle function `componentDidMount`
+If you want to fetch some data when a component is mounted to the dom
 
-```javascript
-export class MyComponent extends Component {
-
-  state = {
-    location: null
-  };
-
-  componentDidMount() {
-    // it's always a good thing to load data when the component is already monted into the DOM
-    // event if it's not http related
+```jsx
+export const MyComponent = () => {
+  const [location, setLocation] = useState(null);
+  
+  useEffect(() => {
+    // here we load the data only when the component is mounted into the DOM
     fetch('https://freegeoip.net/json/')
       .then(r => r.json())
-      .then(location => this.setState({ location }));
-  }
+      .then(location => setLocation(location));
+  }, []);
 
-  render() {
-    return (
-      <div>
-        {!this.state.location && (
-          <h2>Loading ...</h2>
-        )}
-        {this.state.location && (
-          <pre>{JSON.stringify(this.state.location, null, 2)}</pre>
-        )}
-      </div>
-    );
-  }
-})
+  return (
+    <div>
+      {!location && (
+        <h2>Loading ...</h2>
+      )}
+      {location && (
+        <pre>{JSON.stringify(location, null, 2)}</pre>
+      )}
+    </div>
+  );
+};
 ```
 
 ## Binding a text input
 
-```javascript
-import React, { Component } from 'react';
+```jsx
+export const MyComponent = () => {
+  const [content, setContent] = useState('');
 
-export class MyComponent extends Component {
-
-  state = {
-    content: ''
+  const onChange = (e) => {
+    setContent(e.target.value);
   };
 
-  onChange = (e) => {
-    this.setState({ content: e.target.value });
+  const sendContent = () => {
+    // do whatever you want with content
+    // ...
+    // then clear it
+    setContent('');
   };
 
-  sendContent = () => {
-    const content = this.state.content;
-    this.setState({ content: '' }, () => {
-      // do whatever you want with content
-    });
-  };
-
-  render() {
-    return (
-      <div>
-        <input type="text" value={this.state.content} onChange={this.onChange} />
-        <button type="button" onClick={this.sendContent}>Send content</button>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <input type="text" value={content} onChange={onChange} />
+      <button type="button" onClick={sendContent}>Send content</button>
+    </div>
+  );
 }
 ```

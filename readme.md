@@ -27,11 +27,11 @@ src='https://github.com/react-bootcamp/react-101/raw/master/instructions/img/win
 
 The technical requirements are the following
 
-* Node (version 7.x or 8.x) with NPM (at least version 3.x)
+* Node version LTS (currently 16.15.0) with NPM
   * for more convenience use nvm: https://github.com/creationix/nvm
 * Yarn (https://yarnpkg.com)
 * Git
-* A text editor (if you don't have one, just use Atom)
+* A text editor (if you don't have one, just use Visual Studio Code)
 * React Developer Tools
 
 ### Node
@@ -42,13 +42,13 @@ You can verify your current version of `node` and `npm` by running the following
 
 ```sh
 $ node -v
-v8.6.0
+v16.15.0
 
 $ npm -v
-4.2.0
+8.5.5
 
 $yarn -v
-1.2.1
+1.22.18
 ```
 
 you can upgrade an existing version of npm by running the following command :
@@ -67,19 +67,12 @@ Verify the installation by running the following command in a terminal:
 
 ```sh
 $ git --version
-git version 2.8.4
+git version 2.35.1
 ```
 
-### Atom
+### Visual Studio Code
 
-If you don't have a favorite text editor to write Javascript application, we advise you to use [Atom](https://atom.io).
-
-Download and install Atom and install the following packages:
-
-* language-javascript-jsx
-* linter-eslint
-
-To learn how to manage Atom packages: http://flight-manual.atom.io/using-atom/sections/atom-packages/
+If you don't have a favorite text editor to write Javascript application, we advise you to use [Visual Studio Code](https://code.visualstudio.com/).
 
 ### React Developer Tools
 
@@ -96,7 +89,6 @@ If you want to pre-install the dependencies of the project to avoid any network 
 git clone https://github.com/react-bootcamp/react-101 react-101
 cd react-101
 npm install
-npm install -g create-react-app
 ```
 
 or if you want to use `yarn` instead run
@@ -105,7 +97,6 @@ or if you want to use `yarn` instead run
 git clone https://github.com/react-bootcamp/react-101 react-101
 cd react-101
 yarn install
-yarn global add create-react-app
 ```
 
 ### Open Wine API
@@ -127,7 +118,7 @@ Then go to [http://localhost:3000](http://localhost:3000) to explore the documen
 
 ### Common React Patterns
 
-We provide a list of commen React pattern to help you during your journey through React [here](./instructions/patterns.md)
+We provide a list of common React pattern to help you during your journey through React [here](./instructions/patterns.md)
 
 ### Steps
 
