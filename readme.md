@@ -128,5 +128,5 @@ We provide a list of common React pattern to help you during your journey throug
 * [Step 3 : use the Open Wine API to feed the app](./instructions/3-connect-with-the-wine-api.md)
 * [Step 4 : add support for likes](./instructions/4-handle-likes.md)
 * [Step 5 : add support for comments](./instructions/5-handle-comments.md)
-* [Step 6 : integrates a third party JS library](./instructions/6-integrate-with-third-party-apis.md)
+* [Step 6 : integrates a third party JS library](./instructions/6-integrate-with-third-party-lib.md)
 * [Bonus  : split the app into 3 different pages with react-router](./instructions/bonus-react-router.md)
