@@ -28,7 +28,7 @@ Before you start coding, there are few questions to ask:
 
 The first thing to do is to ***"Think React"*** :-)
 
-From the wireframe we can identify sevral components:
+From the wireframe we can identify several components:
 
 * `<Regions />`: the component that manages the list of wine regions (left column)
 * `<WineList />`: the component that manages the list of the wines of the selected region (middle column)
@@ -76,24 +76,26 @@ A good way to start building a React application is:
 
 #### Dumb components
 
-Create all *Dumb Components*: `<Regions />`, `<WineList />` and `<Wine />` and implement the `render()` method for each one, based on the component `props`.
+Create all *Dumb Components*: `<Regions />`, `<WineList />` and `<Wine />` and implement the `return` of each one, based on the component `props`.
 
 ##### `<Regions />`
 
 The `<Regions />` component just display a list of regions. The contract of the `<Regions />` component is the following
 
-```javascript
-import React, { Component } from 'react';
+```jsx
 import PropTypes from 'prop-types';
 
-export class Regions extends Component {
-  static propTypes = {
-    onSelectRegion: PropTypes.func,
-    regions: PropTypes.array, // an array of string
-    region: PropTypes.object // the selected region
-  };
-  ...
-});
+const Regions = () => {
+  // ...
+}
+
+Regions.propTypes = {
+  onSelectRegion: PropTypes.func,
+  regions: PropTypes.array, // an array of string
+  region: PropTypes.object // the selected region
+};
+
+export default Regions;
 ```
 
 the view of `<Regions />` component will look something like
@@ -112,17 +114,18 @@ the view of `<Regions />` component will look something like
 
 The `<WineList />` component display a list of wine for the selected region. The contract of the `<WineList />` component is the following
 
-```javascript
-import React from 'react';
+```jsx
+const WineList = () => {
+  // ...
+}
 
-export class WineList extends Component {
-  static propTypes = {
-    onSelectWine: PropTypes.func,
-    wines: PropTypes.array, // an array of wine object
-    wine: PropTypes.object // the selected wine
-  };
-  ...
-});
+WineList.propTypes = {
+  onSelectWine: PropTypes.func,
+  wines: PropTypes.array, // an array of wine object
+  wine: PropTypes.object // the selected wine
+}
+
+export default WineList;
 ```
 
 the view of `<WineList />` component will look something like
@@ -142,18 +145,16 @@ the view of `<WineList />` component will look something like
 
 The `<Wine />` component display a list of wine for the selected region. The contract of the `<Wine />` component is the following
 
-```javascript
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-export class Wine extends Component {
-
-  static propTypes = {
-    wine: PropTypes.object, // the wine object
-  };
-
-  ...
+```jsx
+const Wine = () => {
+  // ...
 }
+
+Wine.propTypes = {
+  wine: PropTypes.object, // the wine object
+}
+
+export default Wine;
 ```
 
 the view of `<Wine />` component will look something like
@@ -182,7 +183,7 @@ the view of `<Wine />` component will look something like
 
 #### Smart components
 
-`<WineApp />` is the only *Smart Component* in our wine app, it assembles the the whole *Dumb Components* created above.
+`<WineApp />` is the only *Smart Component* in our wine app, it assembles the whole *Dumb Components* created above.
 
 The `<WineApp />` component should look like this:
 
@@ -199,92 +200,78 @@ The `<WineApp />` component should look like this:
 
 Tip: use some fake data for the *Dumb Components* `props`, for example:
 
-```javascript
+```jsx
 <Regions regions={["Bordeaux", "Bourgogne"]} />
 ```
 
-The last thing: don't forget to mount the `<WineApp />` component into the DOM (do this stuff in the `index.html` file), otherwise you'll have a beautiful blank page :-)
+The last thing: don't forget to mount the `<WineApp />` component into the DOM (do this stuff in the `index.js` file), otherwise you'll have a beautiful blank page :-)
 
 ### Initial state
 
 Now it's time to define the `state` of the `<WineApp />` container.
 
-```javascript
-export class WineApp extends Component {
-  state = {
-    regions: [],
-    selectedRegion: null,
-    wines: [],
-    selectedWine: null,
-  };
+```jsx
+const WineApp = () => {
+  const [regions, setRegions] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [wines, setWines] = useState([]);
+  const [selectedWine, setSelectedWine] = useState(null);
+ 
   // ...
+}
 ```
 
-Then use the `state` in the `render()` method:
+Then use the `state` in the `return` of the component:
 
-```javascript
-...
-<Regions regions={this.state.regions} />
-...
+```jsx
+// ...
+<Regions regions={regions} />
+// ...
 ```
 
 Tip: you can move the fake data used previously to the initial state of the component.
 
 ## Handling user events
 
-the last step here is to handle event so the app will become alive.
+The last step here is to handle event so the app will become alive.
 
-In our `<WineApp />` only the dumb components will capture the user events. But they will not actually handle them, they will delegate the processing to the parent component throught a function passed as props.
+In our `<WineApp />` only the dumb components will capture the user events. But they will not actually handle them, they will delegate the processing to the parent component through a function passed as props.
 
 For example, for the `<Regions />` component, we need to do something when the user click on a region. To do that we can write something like the following code :
 
-```javascript
-import React, { Component } from 'react';
-
-class Regions extends Component {
-
-  onSelectRegion = (region) => {
-    this.props.onSelectRegion(region);
-  };
-
-  render () {
-    return (
-      <div className="collection">
-        {
-          this.props.regions.map(region =>
-            <a href="#" className="collection-item" key={region} onClick={e => this.onSelectRegion(region)}>
-              {region}
-            </a>
-          )
-        }
-      </div>
-    )
-  }
+```jsx
+const Regions = ({ regions, onSelectRegion }) => {
+  return (
+    <div className="collection">
+      {
+        regions.map(region =>
+          <a href="#" className="collection-item" key={region} onClick={e => onSelectRegion(region)}>
+            {region}
+          </a>
+        )
+      }
+    </div>
+  )
 }
 ```
 
 And in the parent component, the `<WineApp />` component
 
-```javascript
-import React, { Component } from 'react';
-
-class WineApp extends Component {
-
-  onSelectRegion = (region) => {
-    this.setState({ selectedRegion: region });
+```jsx
+const WineApp = () => {
+  // ...
+  const onSelectRegion = (region) => {
+    setSelectedRegion(region);
     // TODO : maybe we need to reload wines here ???
   };
 
-  render() {
     return (
-      ...
-      <Regions
-        regions={this.state.regions}
-        region={this.state.selectedRegion} 
-        onSelectRegion={this.onSelectRegion} />
-      ...
-    );
-  }
+    // ...
+    <Regions
+      regions={regions}
+      onSelectRegion={onSelectRegion} />
+    // ...
+  );
 }
 ```
 
