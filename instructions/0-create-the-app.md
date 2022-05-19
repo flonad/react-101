@@ -4,25 +4,19 @@ This step is purely informative as it as already be done for you. However we rec
 
 ## create-react-app
 
-The workshop uses the `create-react-app` command to create React apps (captain obvious here). `create-react-app` is a new officially supported way to create single-page React applications. It offers a modern build setup with no configuration.
+The workshop uses the `create-react-app` command to create React apps (captain obvious here). `create-react-app` is an officially supported way to create single-page React applications. It offers a modern build setup with no configuration.
 
 ### Installation
 
-Install it once globally by using the following command
-
-```sh
-yarn create react-app
-```
+Now you don't need to install create-react-app locally. The recommended way is to use npx which will use the last version without installing it.
 
 ### Create an app
 
-to create an app with `create-react-app`, just run the following command
+To create an app with `create-react-app`, just run the following command
 
 ```sh
-create-react-app my-app
-# install polyfill dependencies
+npx create-react-app my-app
 cd my-app
-yarn add es6-shim whatwg-fetch
 ```
 
 ### Run the app
@@ -56,13 +50,13 @@ yarn test
 
 ### Build a production version of the app
 
-the `npm start` command will launch a development server with a development version of your app with some warnings, some typechecking, etc ... but all those check are not wanted in production. To create a production version of your app, just run
+The `yarn start` command will launch a development server with a development version of your app with some warnings, some typechecking, etc ... but all those check are not wanted in production. To create a production version of your app, just run
 
 ```sh
 yarn build
 ```
 
-This will create a `dist` directory that will contain everything needed to deploy your app.
+This will create a `build` directory that will contain everything needed to deploy your app.
 
 ## The file structure of the react-101 project
 
@@ -120,24 +114,21 @@ then open your browser at [http://localhost:3000](http://localhost:3000)
 
 if you look at the `package.json` file you can see something like that
 
-```javascript
+```json
 {
   "name": "react-101",       // the name of your project
-  "version": "1.0.0",        // its version using semver
+  "version": "2.0.0",        // its version using semver
   "private": true,           // yes its a private project
-  "devDependencies": {       // all the tools to buidl and run your project
-    "react-scripts": "1.0.14" // a collection of curated tools and libs by facebook
+  "devDependencies": {       // all the tools to build and run your project
+    // ...
   },
   "dependencies": {          // all the libs used at runtime by your application
-    "es6-shim": "0.35.3",    // polyfill everything we need to use ES6
-    "react": "16.0.0",       // the react core lib
-    "react-dom": "16.0.0",   // the react dom lib
-    "whatwg-fetch": "2.0.3"  // a polyfill for the fetch lib
+    // ...
   },
   "scripts": {               // a bunch a scripts to run your app, build it and test it
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject" // a very interesting feature to remove react-script and evolve your project as you want
   }
 }
