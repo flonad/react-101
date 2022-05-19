@@ -2,82 +2,12 @@
 
 Now that your server is running with a blank React app, we can start to work
 
-## What is a React component
-
-There are several ways to define a React component. Each React component will be defined as a `class` that you will be able to instanciate in your views.
+## Define a React component
 
 **WARNING**: the first letter of the name of a React component should always be **Uppercase**.
 
-## `React.createClass`
-
-The first way to define a React component is the "ancient" way using `React.createClass`, **we will not use** `React.createClass` in this workshop.
-
-```javascript
-import React from 'react';
-
-export const MyComponent = React.createClass({
-  render() {
-    return (
-      <div className="my-component">
-        <h2>I am a very useful component</h2>
-      </div>
-    );
-  }
-});
-```
-
-as you can see, a React component is something really simple. Its only requirement is to have a `render` function that will return the `view` of the component.
-
-And now, i'm pretty sure that you are asking yourself, WTF is `<div>...</div>` inside my JS code ?
-Don't panic, it's just some JSX.
-
-## JSX
-
-[JSX](https://facebook.github.io/jsx/) is a JavaScript syntax extension that looks similar to XML. Actually, your javascript code will be pre-processed before landing in the browser and will be transformed into regular javascript. If you dont like JSX, React doesn't force you to use it, you can just write your component this way
-
-```javascript
-import React from 'react';
-
-// can be replace with
-// import React, { createElement: e } from 'react';
-const e = React.createElement;
-
-export const MyComponent = React.createClass({
-  render() {
-    return (
-      e('div', { className: 'my-component' },
-        e('h2', null, 'I am a very useful component')
-      )
-    );
-  }
-});
-```
-
-## `React.Component`
-
-The second way to define a component is to use ES6 classes
-
-```javascript
-import React, { Component } from 'react';
-
-export class MyComponent extends Component {
-  render() {
-    return (
-      <div className="my-component">
-        <h2>I am a very useful component</h2>
-      </div>
-    );
-  }
-}
-```
-
-It's the new official way to define stateful components, therefore, **it will be used everywhere in the workshop**.
-
-## Functional component
-
-The last way to define a component is to use pure functions. It is quite useful to write small stateless components
-
-```javascript
+```jsx
+// Before React 17 you needed this line in all your jsx files but you don't need it anymore
 import React from 'react';
 
 export const MyComponent = () => (
@@ -91,14 +21,13 @@ export const MyComponent = () => (
 
 Now we want to display the component in the browser. To do that we will use `react-dom` which is a specialized library to render a generic react component inside a DOM environment.
 
-We will use the `render` function of `ReactDOM` to do that
-
 ```javascript
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { MyComponent } from './MyComponent';
 
-ReactDOM.render(<MyComponent />, document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<MyComponent />);
 ```
 
 ## Pass data to the component
@@ -108,179 +37,137 @@ To add properties to a component, you just have to declare it like an XML attrib
 
 Let say we want our component to display a custom message
 
-```javascript
-import React, { Component } from 'react';
-
-export class MyComponent extends Component {
-  render() {
-    const message = this.props.message || 'I am a very useful component';
-    return (
-      <div className="my-component">
-        <h2>{message}</h2>
-      </div>
-    );
-  }
+```jsx
+export const MyComponent = (props) => {
+  const message = props.message || 'I am a very useful component';
+  return (
+    <div className="my-component">
+      <h2>{message}</h2>
+    </div>
+  );
 }
 ```
 
-now to user the property `message` we have to do something like
+In javascript we need some good practices to make things easy, clear and errorless.
+So here, instead of using props and forcing the other devs to search/guess the different properties.
+We use destructuring to list every props directly (Of course, sometimes we can't avoid using props).
+```jsx
+export const MyComponent = ({ message }) => {
+  return (
+    <div className="my-component">
+      <h2>{message || 'I am a very useful component'}</h2>
+    </div>
+  );
+}
+```
+
+Now to use the property `message` we have to do something like
 
 ```javascript
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { MyComponent } from './MyComponent';
 
-//                          the props is passed here
-//                                    |||
-//                           vvvvvvvvvvvvvvvvvvvvvv  
-ReactDOM.render(<MyComponent message="Hello World!" />, document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
+//                      the props is passed here
+//                                |||
+//                       vvvvvvvvvvvvvvvvvvvvvv  
+root.render(<MyComponent message="Hello World!" />);
 ```
 
 In that case, the displayed message will be `Hello World!`
 
-You can provide default values for `props` using static property `defaultProps`
+You can provide default values for `props` using `defaultProps`
 
-```javascript
-import React, { Component } from 'react';
-
-export class MyComponent extends Component {
-
-  static defaultProps = {
-    message: 'I am a very useful component';
-  };
-
-  render() {
-    return (
-      <div className="my-component">
-        <h2>{this.props.message}</h2>
-      </div>
-    );
-  }
+```jsx
+const MyComponent = ({ message }) => {
+  return (
+    <div className="my-component">
+      <h2>{message}</h2>
+    </div>
+  );
 }
+
+MyComponent.defaultValue = {
+  message: 'I am a very useful component'
+}
+
+export default MyComponent;
 ```
 
-You can provide some validation for the `props` of a component using `React.PropTypes` to have error message in developement. it's quite useful when you provide components to other dev teams.
+You can provide some validation for the `props` of a component using `PropTypes` to have error message in developement. it's quite useful when you provide components to other dev teams.
 
-```javascript
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+```jsx
+import { string } from 'prop-types';
 
-export class MyComponent extends Component {
+const MyComponent = ({ message }) => {
+  return (
+    <div className="my-component">
+      <h2>{message}</h2>
+    </div>
+  );
+}
 
-  static propTypes = {
-    message: PropTypes.string
-  };
+MyComponent.propTypes = {
+  message: string
+}
 
-  static defaultProps = {
-    message: 'I am a very useful component'
-  };
+MyComponent.defaultValue = {
+  message: 'I am a very useful component'
+}
 
-  render() {
-    return (
-      <div className="my-component">
-        <h2>{this.props.message}</h2>
-      </div>
-    );
-  }
-});
+export default MyComponent;
 ```
 
 In React, there is a special property used to create nested components. It's the `children` property
 
-```javascript
-import React, { Component } from 'react';
-
-export class MyComponent extends Component {
-  render() {
-    const message = this.props.message || 'I am a very useful component';
-    return (
-      <div className="my-component">
-        <h2>{message}</h2>
-        {this.props.children}
-      </div>
-    );
-  }
+```jsx
+export const MyComponent = ({ children, message }) => {
+  return (
+    <div className="my-component">
+      <h2>{message || 'I am a very useful component'}</h2>
+      {children}
+    </div>
+  );
 }
 ```
 
 ```javascript
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { MyComponent } from './MyComponent';
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <MyComponent message="Hello World!">
     <p>Still a very useful component</p>
   </MyComponent>
-  , document.getElementById('root')
 );
 ```
 
-in that case, the displayed message will be `Hello World!` and `this.props.children` will be equal to `<p>Still a very useful component</p>`
+in that case, the displayed message will be `Hello World!` and `children` will be equal to `<p>Still a very useful component</p>`
 
 ## Store data inside the component using the component state
 
-If components `props` are not enought for your need, you can use the component `state`. The state is specific value for each component instance. Each time the value of the state is changed using `this.setState(...)`, this will trigger a full redraw of the component. Let's write a counter component
+If components `props` are not enough for your need, you can use the component `state`. The state is specific value for each component instance. Each time the value of the state is changed using `setState(...)`, this will trigger a full redraw of the component. Let's write a counter component
 
-```javascript
-import React, { Component } from 'react';
+```jsx
+import { useState } from 'react';
 
-export class Counter extends Component {
+export const Counter = () => {
+  // if you don't define an initial state, your state will be null
+  const [count, setCount] = useState(0);
 
-  state = { // if you don't define an initial state, your state will be null
-    count: 0
+  const incrementCounter = () => {
+    setCount(count + 1); // trigger a component redraw
   };
 
-  incrementCounter = () => {
-    this.setState({ count: this.state.count + 1 }); // trigger a component redraw
-  };
-
-  render() {
-    return (
-      <div>
-        <h2>Count: {this.state.count}</h2>
-        <button type="button" onClick={() => this.incrementCounter()}>increment</button>
-      </div>
-    );
-  }
-}
-```
-
-you can't implement the counter as a functional component because functional component don't have a state.
-
-## Store data inside the component using the component instance
-
-If your when to store something technical in a component instance without triggering a redraw of the component, you can just store whatever you want on `this`
-
-```javascript
-import React, { Component } from 'react';
-
-export class Clock extends Component {
-
-  state = { // if you don't define an initial state, your state will be null
-    time: Date.now()
-  };
-
-  update = () => {
-    this.setState({ time: Date.now() });
-  };
-
-  componentDidMount() { // will be called when component is mounted in the DOM
-    this.interval = setInterval(this.update, 1000); // here we store the interval id on the component instance
-  }
-
-  componentWillUnmount() { // will be called when component is removed from the DOM
-    clearInterval(this.interval);
-  }
-
-  render() {
-    return (
-      <div>
-        <h2>Count: {this.state.count}</h2>
-        <button type="button" onClick={this.incrementCounter}>increment</button>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h2>Count: {count}</h2>
+      <button type="button" onClick={incrementCounter}>increment</button>
+    </div>
+  );
 }
 ```
 
@@ -288,57 +175,54 @@ export class Clock extends Component {
 
 Let's write a nice component that will display details of a wine. This wine will be provided as a property.
 
-First let's just display it's name
+First let's just display its name
 
-```javascript
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+```jsx
+import { shape, string } from 'prop-types';
 
-export class Wine extends Component {
-
-  static propTypes = {
-    wine: PropTypes.shape({
-      name: PropTypes.string
-    })
-  };
-
-  static defaultProps = {
-    wine: {
-      name: 'Some Wine'
-    }
-  };
-
-  render() {
-    return (
-      <div className="card horizontal">   
-        <div className="card-stacked">
-          <div className="card-content">
-            <h3>{this.props.wine.name}</h3>
-          </div>
+const Wine = ({ wine }) => {
+  return (
+    <div className="card horizontal">   
+      <div className="card-stacked">
+        <div className="card-content">
+          <h3>{wine.name}</h3>
         </div>
       </div>
-    );
+    </div>
+  )
+}
+
+Wine.propTypes = {
+  wine: shape({
+    name: string
+  })
+}
+
+Wine.defaultProps = {
+  wine: {
+    name: "Some Wine"
   }
 }
+
+export default Wine;
 ```
 
-to mount it just write something like
+To mount it just write something like
 
 ```javascript
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Wine } from './Wine';
+import ReactDOM from 'react-dom/client';
+import Wine from './Wine';
 
 const wine = { name: 'Château Chevrol Bel Air' };
 
-ReactDOM.render(
-  <Wine wine={wine}/>, document.getElementById('root')
-);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Wine wine={wine}/>);
 ```
 
-now it's up to you !!! let say a wine is an object like that
+Now it's up to you !!! let say a wine is an object like that
 
-```javascript
+```json
 {
   "id": "chevrol-bel-air",
   "name": "Château Chevrol Bel Air",
@@ -398,20 +282,20 @@ Let say the `<Wine />` component should now look like
 </div>
 ```
 
-to achieve that, you will create a new component called `<LikeButton />` with the following contract
+To achieve that, you will create a new component called `<LikeButton />` with the following contract
 
-```javascript
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+```jsx
+import { number } from 'prop-types';
 
-export class LikeButton extends Component {
-
-  static propTypes = {
-    startCounterAt: PropTypes.number
-  };
-
-  ...
+const LikeButton = ({ startCounterAt }) => {
+  //...
 }
+
+LikeButton.propTypes = {
+  startCounterAt: number.isRequired
+};
+
+export default LikeButton;
 ```
 
 the `<LikeButton />` component will have a state to hold the number of likes for the button and a click listener to increment the like counter.
