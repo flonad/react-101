@@ -13,37 +13,33 @@ The URL you need are the following
 Obviously, you'll need to add the following functions to the module responsible for calling the API
 
 ```javascript
-export function fetchComments(id) {
+export const fetchComments = (id) => {
   ...
 }
 ```
 
 ## The `<CommentList />` component
 
-The  `<CommentList />` will be added in the `card-action` section and will have the following contract
+The `<CommentList />` will be added in the `card-action` section and will have the following contract
 
-```javascript
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-export class CommentList extends Component {
-
-  static propTypes = {
-    wine: PropTypes.object
-  };
-
-  state = {
-    comments: []
-  };
-  ...
+```jsx
+const CommentList = ({ wine }) => {
+  const [comments, setComments] = useState([]);
+  // ...
 }
+
+CommentList.propTypes = {
+  wine: PropTypes.object
+}
+
+export default CommentList;
 ```
 
 the view of `<CommentList />` will look something like
 
 ```html
 <div>
-  <!-- here the title is only displayed if there is at least one comment -->
+  <!-- here the title should only be displayed if there is at least one comment -->
   <h5>Comments</h5>
   <Comment ... />
   <Comment ... />
@@ -57,19 +53,13 @@ We can see that the comment list will use another component to display each comm
 
 The `<Comment />` component will have the following contract
 
-```javascript
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-export class Comment extends Component {
-  static propTypes = {
-    comment: PropTypes.object
-  };
-  ...
-});
+```jsx
+const Comment = ({ comment }) => {
+  // ...
+}
 ```
 
-the view of `<Comment />` component will look something like
+The view of `<Comment />` component will look something like
 
 ```html
 <p class="comment" data-title="title of the comment" data-date="date of the comment">
