@@ -88,7 +88,7 @@ const MyComponent = ({ message }) => {
   );
 }
 
-MyComponent.defaultValue = {
+MyComponent.defaultProps = {
   message: 'I am a very useful component'
 }
 
@@ -112,7 +112,7 @@ MyComponent.propTypes = {
   message: string
 }
 
-MyComponent.defaultValue = {
+MyComponent.defaultProps = {
   message: 'I am a very useful component'
 }
 
